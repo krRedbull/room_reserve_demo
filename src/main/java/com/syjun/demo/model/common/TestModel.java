@@ -1,19 +1,19 @@
-package com.syjun.demo.model;
+package com.syjun.demo.model.common;
 
-import com.syjun.demo.model.common.BaseDto;
 import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Date;
 
 @Data
 @Entity
-public class MeetingRoom extends BaseDto {
+public class TestModel extends BaseDto{
 
     @Id
     @GeneratedValue
     private long id;
 
-    private String roomName;
+    private Date checkDate;
 }
