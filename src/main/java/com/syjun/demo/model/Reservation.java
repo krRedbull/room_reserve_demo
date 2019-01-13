@@ -18,6 +18,8 @@ public class Reservation extends BaseDto {
 
     private long roomId;
 
+    private String reserveDate;
+
     private String reserveName;
 
     private long reserveTimetable;

@@ -2,12 +2,10 @@ package com.syjun.demo.controller;
 
 import com.syjun.demo.model.common.TestModel;
 import com.syjun.demo.repository.TestRepository;
+import com.syjun.demo.service.MeetingRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -17,18 +15,20 @@ import java.util.List;
 public class DemoController {
 
     @Autowired
-    TestRepository testRepository;
+    MeetingRoomService meetingRoomService;
+
 
     @GetMapping("/health")
     public String healthCheck(){
-        TestModel tm = new TestModel();
-        tm.setCheckDate(new Date());
-        testRepository.save(tm);
         return "OK";
     }
 
-    @GetMapping("/health/list")
-    public List<TestModel> getList(){
-        return testRepository.findAll();
+    @PostMapping("/initialize")
+    public String initDemo(){
+
+        for(int i=0;i<3;i++){
+            meetingRoomService.setMeetingRoom("meeting_room_"+i);
+        }
+        return "OK";
     }
 }

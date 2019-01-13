@@ -1,5 +1,6 @@
 package com.syjun.demo.service;
 
+import com.syjun.demo.exceptions.InvalidReserveTimeException;
 import com.syjun.demo.model.DailyTimetable;
 import com.syjun.demo.model.Reservation;
 import com.syjun.demo.repository.MeetingRoomRepository;
@@ -31,7 +32,7 @@ public class MeetingRoomReservationService {
     }
 
     @Transactional
-    public void reserveMeetingRoom(String selectedDate, long roomId, String reserveName, long reserveTime, int repeatTime) throws ParseException {
+    public void reserveMeetingRoom(String selectedDate, long roomId, String reserveName, long reserveTime, int repeatTime) throws ParseException, InvalidReserveTimeException {
         if(repeatTime > 0){
             this.reserveRepeat(selectedDate, roomId, reserveName, reserveTime, repeatTime);
         }else{
@@ -40,7 +41,7 @@ public class MeetingRoomReservationService {
         }
     }
 
-    private void reserveRepeat(String selectedDate, long roomId, String reserveName, long reserveTime, int repeatTime) throws ParseException {
+    private void reserveRepeat(String selectedDate, long roomId, String reserveName, long reserveTime, int repeatTime) throws ParseException, InvalidReserveTimeException {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -58,7 +59,7 @@ public class MeetingRoomReservationService {
 
     }
 
-    private void reserve(String selectedDate, long roomId, String reserveName, long reserveTime){
+    private Reservation reserve(String selectedDate, long roomId, String reserveName, long reserveTime) throws InvalidReserveTimeException {
         DailyTimetable dailyTimetable = dailyTimetableService.getDailyTimetable(roomId, selectedDate);
         if(isAvailable(reserveTime, dailyTimetable.getTimetable())){
             dailyTimetable.setTimetable(dailyTimetable.getTimetable() + reserveTime);
@@ -66,11 +67,12 @@ public class MeetingRoomReservationService {
 
             Reservation reservation = new Reservation();
             reservation.setRoomId(roomId);
+            reservation.setReserveDate(selectedDate);
             reservation.setReserveName(reserveName);
             reservation.setReserveTimetable(reserveTime);
 
-            reservationService.saveReservation(reservation);
-        }
+            return reservationService.saveReservation(reservation);
+        } throw new InvalidReserveTimeException();
     }
 
 
