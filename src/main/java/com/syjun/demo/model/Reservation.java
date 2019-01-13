@@ -1,6 +1,7 @@
 package com.syjun.demo.model;
 
 import com.syjun.demo.model.common.BaseDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -19,5 +20,5 @@ public class Reservation extends BaseDto {
 
     private String reserveName;
 
-    private int reserveTimetable;
+    private long reserveTimetable;
 }

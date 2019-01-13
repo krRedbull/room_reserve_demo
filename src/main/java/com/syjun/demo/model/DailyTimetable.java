@@ -18,8 +18,8 @@ public class DailyTimetable extends BaseDto {
 
     private long roomId;
 
-    private Date date;
+    private String date;
 
-    private int timetable;
+    private long timetable;
 
 }
