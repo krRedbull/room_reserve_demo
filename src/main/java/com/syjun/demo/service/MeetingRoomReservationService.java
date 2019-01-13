@@ -51,8 +51,6 @@ public class MeetingRoomReservationService {
             Calendar c = Calendar.getInstance();
             c.setTime(date);
             c.add(Calendar.DATE, (7 * i));
-
-            sdf.format(c.getTime());
             this.reserve(sdf.format(c.getTime()), roomId, reserveName, reserveTime);
         }
 

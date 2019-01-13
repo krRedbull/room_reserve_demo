@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Date;
+import java.util.Arrays;
 
 @Data
 @Entity
@@ -21,5 +21,16 @@ public class DailyTimetable extends BaseDto {
     private String date;
 
     private long timetable;
+
+    public Boolean[] getTimetableArray(){
+        Boolean[] booleans = new Boolean[48];
+        Arrays.fill(booleans, false);
+
+        for(int i=0; i< Long.bitCount(this.timetable); i++){
+            booleans[i] = (this.timetable & (1<< i)) !=0;
+        }
+
+        return booleans;
+    }
 
 }
