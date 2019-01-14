@@ -1,0 +1,13 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /demotest
+
+logging:
+  level:
+    root: info
+
+reserve:
+  max-repeat: 4
+  max-available-day-after: 60
