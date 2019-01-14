@@ -38,7 +38,7 @@ public class ReservationAPIController {
             @RequestBody ReserveMeetingRoomParam param
 //            @RequestBody long reserveTime,
 //            @RequestBody(required = false) int repeatTime
-    ) throws ParseException, InvalidReserveTimeException {
+    ) throws ParseException {
         return meetingRoomReservationService.reserveMeetingRoom(selectedDate, roomId, param.getReserveName(), param.getReserveTime(), MoreObjects.firstNonNull(param.getRepeatTime(),0));
     }
 

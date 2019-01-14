@@ -23,6 +23,10 @@ public class DemoController {
         return "OK";
     }
 
+    /**
+     *  test 용으로 사용함 일반적인 사용 X
+     * @return
+     */
     @PostMapping("/initialize")
     public String initDemo(){
 

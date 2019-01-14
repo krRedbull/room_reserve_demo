@@ -1,12 +1,15 @@
 package com.syjun.demo.service;
 
 import com.google.common.collect.Lists;
+import com.syjun.demo.exceptions.InvalidDateException;
 import com.syjun.demo.exceptions.InvalidReserveTimeException;
+import com.syjun.demo.exceptions.OverRepeatTimeException;
 import com.syjun.demo.model.DailyTimetable;
 import com.syjun.demo.model.Reservation;
 import com.syjun.demo.repository.MeetingRoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,6 +26,11 @@ import java.util.List;
 @Service
 @Slf4j
 public class MeetingRoomReservationService {
+    @Value("${reserve.max-repeat}")
+    private int MAX_REPEAT;
+
+    @Value("${reserve.max-available-day-after}")
+    private int MAX_AVAILABLE_DAY_AFTER;
 
     private final DailyTimetableService dailyTimetableService;
     private final MeetingRoomRepository meetingRoomRepository;
@@ -37,7 +45,11 @@ public class MeetingRoomReservationService {
 
     @Transactional
     public List<Reservation> reserveMeetingRoom(String selectedDate, long roomId, String reserveName, long reserveTime, int repeatTime) throws ParseException, InvalidReserveTimeException {
-        if(repeatTime > 0){
+        if(repeatTime > MAX_REPEAT){
+            throw new OverRepeatTimeException();
+        }
+
+        if(repeatTime > 1){
             return this.reserveRepeat(selectedDate, roomId, reserveName, reserveTime, repeatTime);
         }else{
             return Lists.newArrayList(this.reserve(selectedDate, roomId, reserveName, reserveTime));
@@ -61,9 +73,11 @@ public class MeetingRoomReservationService {
         return reservationList;
     }
 
-    private Reservation reserve(String selectedDate, long roomId, String reserveName, long reserveTime) throws InvalidReserveTimeException {
+    private Reservation reserve(String selectedDate, long roomId, String reserveName, long reserveTime) throws InvalidReserveTimeException, ParseException {
         log.info("일반 예약...");
         DailyTimetable dailyTimetable = dailyTimetableService.getDailyTimetable(roomId, selectedDate);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        checkAvailableDate(sdf.parse(selectedDate));
         if(isAvailable(reserveTime, dailyTimetable.getTimetable())){
             dailyTimetable.setTimetable(dailyTimetable.getTimetable() + reserveTime);
             dailyTimetableService.updateDailyTimetable(dailyTimetable);
@@ -87,6 +101,18 @@ public class MeetingRoomReservationService {
             return true;
         }else {
             return false;
+        }
+    }
+
+    private void checkAvailableDate(Date selectedDate){
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
+        Date currentDate = new Date();
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(currentDate);
+        c.add(Calendar.DATE, MAX_AVAILABLE_DAY_AFTER);
+        if(selectedDate.getTime() > c.getTimeInMillis()){
+            throw new InvalidDateException();
         }
     }
 

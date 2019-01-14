@@ -7,3 +7,7 @@ spring:
 logging:
   level:
     root: info
+
+reserve:
+  max-repeat: 4
+  max-available-day-after: 60

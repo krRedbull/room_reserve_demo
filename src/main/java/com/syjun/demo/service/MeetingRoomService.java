@@ -1,11 +1,13 @@
 package com.syjun.demo.service;
 
+import com.syjun.demo.exceptions.ExistRoomNameException;
 import com.syjun.demo.model.MeetingRoom;
 import com.syjun.demo.repository.MeetingRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class MeetingRoomService {
@@ -21,6 +23,10 @@ public class MeetingRoomService {
     }
 
     public MeetingRoom setMeetingRoom(String roomName){
+        MeetingRoom exist = meetingRoomRepository.findOneByRoomName(roomName);
+        if(Objects.nonNull(exist)){
+            throw new ExistRoomNameException();
+        }
         MeetingRoom meetingRoom = new MeetingRoom();
         meetingRoom.setRoomName(roomName);
         return meetingRoomRepository.save(meetingRoom);
@@ -29,4 +35,5 @@ public class MeetingRoomService {
     public List<MeetingRoom> getMeetingRoomList(){
         return meetingRoomRepository.findAll();
     }
+
 }

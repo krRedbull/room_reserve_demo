@@ -7,32 +7,12 @@
     <link rel="stylesheet" href="/css/fullcalendar.min.css">
     <link rel="stylesheet" href="/css/bootadmin.min.css">
     <script type="text/javascript" src="/jquery-3.3.1.min.js"></script>
+
+
 </head>
 <body class="bg-light">
 <div class="content p-4">
-    <h1><a href="/view/">회의실 예약 서비스</a></h1>
     <h2 class="mb-4">${selectedDate} 예약 현황</h2>
-    <div>
-        <table>
-            <tr>
-                <th>날짜 선택</th>
-                <td>
-                    <select id="dateSelectBox" onchange="window.location.href=this.value">
-                        <#list availableDateList as availableDate>
-                            <option value="/view/${availableDate.value}" <#if availableDate.value==selectedDate>selected</#if>>${availableDate.view}</option>
-                        </#list>
-                    </select>
-                </td>
-            </tr>
-        </table>
-        <input id="selectedDate" value="${selectedDate}" hidden/>
-        <input id="roomId" value="" placeholder="room_id" hidden/>
-        <input id="reserveTime" value=0 hidden/>
-        <input type="text" id="reserveName" value="" placeholder="예약자 이름" />
-        <select id="repeatTime">
-        </select>
-        <button type="button" class="btn btn-primary" onclick="reserve();">예약하기</button>
-    </div>
 </div>
 
 <div class="content p-4" style="overflow:auto">
@@ -94,9 +74,9 @@
                     <th>${meetingRoom.roomName}</th>
                     <#list meetingRoom.timetableArray as reserved>
                         <#if reserved>
-                            <td class="table-danger" data-toggle="tooltip" title data-original-title="${meetingRoom.reserveNameArray[reserved?index]}">${meetingRoom.reserveNameArray[reserved?index]}</td>
+                            <td class="table-danger">${meetingRoom.reserveNameArray[reserved?index]}</td>
                         <#else>
-                            <td class="table-success"><input type="checkbox" name="${meetingRoom.roomName}" value="${reserved?index}" /></td>
+                            <td class="table-success"></td>
                         </#if>
                     </#list>
                 </tr>
@@ -105,41 +85,6 @@
     </table>
 </div>
 <script type="text/javascript">
-
-    var reserve = function(){
-        if($('input:checked').length==0){
-            alert("예약 시간을 지정하세요.");
-            return 0;
-        }
-
-        if($('#reserveName').val().length==0){
-            alert("예약 내용을 입력하세요.");
-            return 0;
-        }
-
-        var params = {
-            'reserveName': $('#reserveName').val(),
-            'reserveTime': $('#reserveTime').val(),
-            'repeatTime': $('#repeatTime').val()
-        };
-
-        var url = "/api/reservation/"+$('#selectedDate').val()+"/"+$('#roomId').val();
-
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: JSON.stringify(params),
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function(data){
-                location.reload(true);
-            },
-            error: function(data){
-                alert(data.responseJSON.message);
-            }
-        });
-    }
-
     <#list meetingRoomResponse as meetingRoom>
     $('input[name="${meetingRoom.roomName}"]').change(function(){
         if($('input[name="${meetingRoom.roomName}"]:checked').length!=0){
@@ -165,22 +110,9 @@
             $('#reserveTime').val(time - checkedValue);
         }
     })
-    $(document).ready(function(){
-        var i;
-        for(i=1; i <= ${maxRepeat}; i++){
-            if(i==1){
-                $('#repeatTime').append($('<option/>',{
-                    value: i,
-                    text: i+" 회 (반복 없음)"
-                }));
-            } else {
-                $('#repeatTime').append($('<option/>',{
-                    value: i,
-                    text: i+" 회"
-                }));
-            }
-        }
-    });
+
 </script>
 </body>
+
+
 </html>

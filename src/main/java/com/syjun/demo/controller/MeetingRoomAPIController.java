@@ -2,14 +2,12 @@ package com.syjun.demo.controller;
 
 import com.syjun.demo.model.DailyTimetable;
 import com.syjun.demo.model.MeetingRoom;
+import com.syjun.demo.model.request.MeetingRoomParam;
 import com.syjun.demo.service.DailyTimetableService;
 import com.syjun.demo.service.MeetingRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +21,13 @@ public class MeetingRoomAPIController {
     public MeetingRoomAPIController(MeetingRoomService meetingRoomService, DailyTimetableService dailyTimetableService){
         this.meetingRoomService = meetingRoomService;
         this.dailyTimetableService = dailyTimetableService;
+    }
+
+    @PostMapping({"", "/"})
+    public MeetingRoom createMeetingRoom(
+            @RequestBody MeetingRoomParam param
+    ){
+        return meetingRoomService.setMeetingRoom(param.getRoomName());
     }
 
     @GetMapping("/list")
