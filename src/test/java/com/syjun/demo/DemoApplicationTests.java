@@ -19,7 +19,7 @@ public class DemoApplicationTests {
 
     @Test
     public void bitOperation(){
-        long a = 47534L;
+        long a = 281474976710655L;
         long b = 17L;
 
         System.out.println(Long.toBinaryString(a));

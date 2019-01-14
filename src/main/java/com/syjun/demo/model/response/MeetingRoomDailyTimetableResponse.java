@@ -8,5 +8,5 @@ import lombok.Data;
 public class MeetingRoomDailyTimetableResponse {
     private long roomId;
     private String roomName;
-    private Boolean[] timetableArray;
+    private boolean[] timetableArray;
 }

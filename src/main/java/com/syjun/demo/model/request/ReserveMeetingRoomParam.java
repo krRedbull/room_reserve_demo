@@ -7,9 +7,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ReserveMeetingRoomParam {
 
-    @NotNull
     String reserveName;
-    @NotNull
     long reserveTime;
     Integer repeatTime;
 }

@@ -7,6 +7,7 @@ import com.syjun.demo.model.response.AvailableDateResponse;
 import com.syjun.demo.model.response.MeetingRoomDailyTimetableResponse;
 import com.syjun.demo.service.DailyTimetableService;
 import com.syjun.demo.service.MeetingRoomService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @RequestMapping("/view")
 @RestController
+@Slf4j
 public class ViewController {
 
     private final MeetingRoomService meetingRoomService;
@@ -50,13 +52,13 @@ public class ViewController {
     ){
         List<MeetingRoom> meetingRoomList = meetingRoomService.getMeetingRoomList();
         List<MeetingRoomDailyTimetableResponse> dailyTimetableResponses = Lists.newArrayList();
-        meetingRoomList.forEach(meetingRoom -> {
+
+        meetingRoomList.stream().forEach(meetingRoom -> {
             DailyTimetable dailyTimetable = dailyTimetableService.getDailyTimetable(meetingRoom.getId(), selectedDate);
             dailyTimetableResponses.add( new MeetingRoomDailyTimetableResponse(meetingRoom.getId(), meetingRoom.getRoomName(), dailyTimetable.getTimetableArray()));
         });
 
         mv.addObject("availableDateList", this.getAvailableDate());
-
         mv.addObject("meetingRoomResponse", dailyTimetableResponses);
         mv.addObject("selectedDate", selectedDate);
         mv.setViewName("reservation");
@@ -79,5 +81,13 @@ public class ViewController {
 
         return availableDateList;
     }
+
+//    private boolean[] getTimetableArray(long timetable){
+//        boolean[] booleans = new boolean[48];
+//        for(int i=0; i<Long.toBinaryString(timetable).length(); i++){
+//            booleans[i] = (timetable & (1<< i)) !=0;
+//        }
+//        return booleans;
+//    }
 
 }

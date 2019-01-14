@@ -11,7 +11,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,16 +32,14 @@ public class ReservationAPIController {
     }
 
     @PostMapping("/{selectedDate}/{roomId}")
-    public Object reserveMeetingRoom(
+    public List<Reservation> reserveMeetingRoom(
             @PathVariable long roomId,
             @PathVariable @DateTimeFormat(pattern = "yyyyMMdd") String selectedDate,
             @RequestBody ReserveMeetingRoomParam param
 //            @RequestBody long reserveTime,
 //            @RequestBody(required = false) int repeatTime
     ) throws ParseException, InvalidReserveTimeException {
-        meetingRoomReservationService.reserveMeetingRoom(selectedDate, roomId, param.getReserveName(), param.getReserveTime(), MoreObjects.firstNonNull(param.getRepeatTime(),0));
-
-        return null;
+        return meetingRoomReservationService.reserveMeetingRoom(selectedDate, roomId, param.getReserveName(), param.getReserveTime(), MoreObjects.firstNonNull(param.getRepeatTime(),0));
     }
 
     @GetMapping("/{selectedDate}/{roomId}")

@@ -12,7 +12,7 @@
 </head>
 <body>
 <div>
-    <h2 class="mb-4">${selectedDate}</h2>
+    <h2 class="mb-4">${selectedDate} 예약 현황</h2>
     <div>
         <table>
             <tr>
@@ -20,20 +20,28 @@
                 <td>
                     <select id="dateSelectBox" onchange="window.location.href=this.value">
                         <#list availableDateList as availableDate>
-                            <option value="/view/${availableDate.value}">${availableDate.view}</option>
+                            <option value="/view/${availableDate.value}" <#if availableDate.value==selectedDate>selected</#if>>${availableDate.view}</option>
                         </#list>
                     </select>
                 </td>
-
             </tr>
         </table>
-        <input id="selectedDate" value="${selectedDate}" />
-        <input id="roomId" value="" />
+        <input id="selectedDate" value="${selectedDate}" hidden/>
+        <input id="roomId" value="" placeholder="room_id" hidden/>
+        <input id="reserveTime" value=0 />
+        <input type="text" id="reserveName" value="" placeholder="예약내용" />
+        <select id="repeatTime">
+            <option value="0" selected>1회 (반복없음)</option>
+            <option value="1">2회</option>
+            <option value="2">3회</option>
+            <option value="3">4회</option>
+        </select>
+        <button type="button" class="btn btn-primary" onclick="reserve();">예약하기</button>
     </div>
 </div>
 
 <div style="width: 100%; overflow:auto">
-    <table class="table" width="100%" border="0" cellspacing="0" cellpadding="0">
+    <table class="table-sm" width="100%">
         <thead>
             <th width="3%">Time</th>
             <th>00:00<br>~00:30</th>
@@ -102,13 +110,49 @@
     </table>
 </div>
 <script type="text/javascript">
+
+    var reserve = function(){
+        if($('input:checked').length==0){
+            alert("예약 시간을 지정하세요.");
+            return 0;
+        }
+
+        if($('#reserveName').val().length==0){
+            alert("예약 내용을 입력하세요.");
+            return 0;
+        }
+
+        var params = {
+            'reserveName': $('#reserveName').val(),
+            'reserveTime': $('#reserveTime').val(),
+            'repeatTime': $('#repeatTime').val()
+        };
+
+        var url = "/api/reservation/"+$('#selectedDate').val()+"/"+$('#roomId').val();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(params),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function(data){
+                location.reload(true);
+            },
+            error: function(data){
+                alert(data.responseJSON.message);
+            }
+        });
+    }
+
     <#list meetingRoomResponse as meetingRoom>
     $('input[name="${meetingRoom.roomName}"]').change(function(){
         if($('input[name="${meetingRoom.roomName}"]:checked').length!=0){
             $('input[name!="${meetingRoom.roomName}"]').prop('disabled',true);
             $('#roomId').val(${meetingRoom.roomId});
+            $('#reserveName').prop('disabled',false);
         }
-    });
+    });    
     </#list>
     $('input[type="checkbox"]').change(function(){
         if($('input[type="checkbox"]:checked').length==0){
@@ -116,6 +160,16 @@
             $('#roomId').val("");
         }
     });
+    
+    $('input[type="checkbox"').change(function () {
+        var time= parseInt($('#reserveTime').val());
+        var checkedValue = Math.pow(2,this.value);
+        if(this.checked){
+            $('#reserveTime').val(time + checkedValue);
+        }else{
+            $('#reserveTime').val(time - checkedValue);
+        }
+    })
 
 </script>
 </body>
