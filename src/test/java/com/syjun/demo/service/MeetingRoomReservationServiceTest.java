@@ -16,8 +16,12 @@ public class MeetingRoomReservationServiceTest {
     MeetingRoomReservationService meetingRoomReservationService;
 
     @Test
-    public void reserveTest() throws ParseException, InvalidReserveTimeException {
+    public void reserveTest() throws ParseException {
+        meetingRoomReservationService.reserveMeetingRoom("20190113", 1, "asdf", 554, 0);
+    }
 
-        meetingRoomReservationService.reserveMeetingRoom("201910113", 1, "asdf", 554, 0);
+    @Test
+    public void reserveRepeatTest() throws ParseException, InvalidReserveTimeException {
+        meetingRoomReservationService.reserveMeetingRoom("20190114", 1, "asdf", 554, 4);
     }
 }

@@ -4,21 +4,16 @@ import com.syjun.demo.model.common.BaseDto;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @Data
 @Entity
+@IdClass(DailyTimetableKey.class)
 public class DailyTimetable extends BaseDto {
-
     @Id
-    @GeneratedValue
-    private long id;
-
     private long roomId;
 
+    @Id
     private String date;
 
     private long timetable;

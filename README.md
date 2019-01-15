@@ -11,8 +11,54 @@
 - Java 8
 - Spring Boot 2.1.1
 - H2
-- JPA
+- Gradle
 - Freemarker
+- bootstrap : bootAdmin ( https://bootadmin.net/ )
+
+## 개발환경 및 사용 툴
+
+- Intellij
+- Java 8
+- Gradle
+- Window 10 64bit / Mac OS
+- git
+- SourceTree
+- Insomnia REST Client
+
+## 프로젝트 실행 방법
+
+> 프로젝트를 Clone 받는다.
+
+![Alt text](/src/main/resources/static/image/step_1.PNG)
+
+> 루트 폴더에서 프로젝트를 Build 한다.
+
+<pre>
+> ./gradlew clean
+> ./gradlew build
+</pre>
+
+권한 문제가 있다면 gradlew 에 chmod 로 권한을 주고 실행한다.
+
+> jar 파일을 실행시킨다.
+<pre>
+> cd build/libs/
+> java -jar demo-0.0.1-SNAPSHOT.jar
+</pre>
+
+> 아래 주소로 접속한다.
+<pre>
+localhost:8080/view
+</pre>
+
+> UI 에서 회의실을 등록한다.
+
+![Alt text](/src/main/resources/static/image/step_2.PNG)
+
+> 예약할 날짜를 선택한다.
+
+![Alt text](/src/main/resources/static/image/step_3.PNG)
+
 
 ## 기본 정책
 
@@ -25,7 +71,7 @@
 ## 문제 해결
 > 예약 상태는 true/false 로만 표현할 수 있다.
 
-하루 24시간 30분 단위 예약이면 00:00~00:30 부터 23:30~24:00 까지 총 48개의 예약 플래그가 필요하다.
+하루 24시간 30분 단위 예약이면 00:00\~00:30 부터 23:30\~24:00 까지 총 48개의 예약 플래그가 필요하다.
 
 단순히 예약을 했다 안했다의 판단값만 저장하면 되기 때문에 true/false 표현만 가능하다면....OK
 
@@ -74,3 +120,25 @@
 아래와 같은 화면구성을 볼 수 있다.
 
 ![Alt text](/src/main/resources/static/image/demo.PNG)
+
+## 기타...
+
+문제 확인 및 분석 30분 
+
+스키마 설계 30분
+
+깃 베이스 프로젝트 세팅 1시간
+
+H2 DB 연동 및 CRUD 테스트 2시간 + @ 
+
+bit 연산 로직 작성 및 테스트 2시간 + @ // 요부분 삽질 시간 좀 길었음
+
+컨트롤러 작성하고 API 테스트 2시간 + @
+
+View 구성 1시간 + @ // bootstrap 쓸까말까 고민하다가 기본은 좀 찜찜해서 무료 템플릿 붙임
+
+html 및 스크립트 코드 작성 3시간 + @ // 프론트는 아직도 손이 많이간다..
+
+마무리 테스트 및 README 정리 3시간
+
+빡세게 했으면 버닝데이마냥 24시간 안에 얼추 구현했을듯?
